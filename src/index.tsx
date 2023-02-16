@@ -70,7 +70,7 @@ export default function useDrivePicker(): [
         if (!accessToken) {
           return
         }
-        setAuthRes(accessToken)
+        // setAuthRes(accessToken)
         createPicker({...config, token: accessToken})
       });
     }
