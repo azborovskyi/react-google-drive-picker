@@ -23,7 +23,7 @@ export type PickerCallback = {
   docs: CallbackDoc[]
 }
 
-export type authResult =  {
+export type authResult = {
   access_token: string;
   token_type: string;
   expires_in: number;
@@ -54,6 +54,7 @@ export type PickerConfiguration = {
   setSelectFolderEnabled?: boolean
   disableDefaultView?: boolean
   token?: string
+  getTokenCallback?: () => Promise<string>
   multiselect?: boolean
   disabled?: boolean
   appId?: string

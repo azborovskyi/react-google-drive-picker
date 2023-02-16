@@ -2,7 +2,7 @@
 declare let google: any
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any
-import { useEffect, useState } from 'react'
+import {useEffect, useState} from 'react'
 import {
   authResult,
   defaultConfiguration,
@@ -65,21 +65,14 @@ export default function useDrivePicker(): [
     // global scope given conf
     setConfig(config)
 
-    // if we didnt get token generate token.
     if (!config.token) {
-      const client = google.accounts.oauth2.initTokenClient({
-        client_id: config.clientId,
-        scope: (config.customScopes
-          ? [...defaultScopes, ...config.customScopes]
-          : defaultScopes
-        ).join(' '),
-        callback: (tokenResponse: authResult) => {
-          setAuthRes(tokenResponse)
-          createPicker({ ...config, token: tokenResponse.access_token })
-        },
-      })
-
-      client.requestAccessToken()
+      config.getTokenCallback?.().then(accessToken => {
+        if (!accessToken) {
+          return
+        }
+        setAuthRes(accessToken)
+        createPicker({...config, token: accessToken})
+      });
     }
 
     // if we have token and everything is loaded open the picker
@@ -93,7 +86,7 @@ export default function useDrivePicker(): [
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     window.gapi.load('auth')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    window.gapi.load('picker', { callback: onPickerApiLoad })
+    window.gapi.load('picker', {callback: onPickerApiLoad})
   }
 
   const onPickerApiLoad = () => {
